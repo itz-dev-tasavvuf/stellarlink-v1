@@ -1,0 +1,179 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { User, Mail, Lock, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
+
+const RegisterForm: React.FC = () => {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    // Validation
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    
+    setIsLoading(true);
+
+    try {
+      // For demo purposes, we'll simulate registration
+      await register(fullName, email, password);
+      navigate('/map');
+    } catch (err) {
+      setError('Failed to create account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-md mx-auto"
+    >
+      <div className="card p-8">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold">Join StellarLink</h1>
+          <p className="text-space-400 mt-2">Create your account to connect with space enthusiasts</p>
+        </div>
+
+        {error && (
+          <div className="bg-nebula-900/30 border border-nebula-700/50 rounded-lg p-3 mb-4 flex items-start gap-3">
+            <AlertCircle className="text-nebula-500" size={18} />
+            <p className="text-sm text-nebula-300">{error}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="fullName" className="block text-sm font-medium text-space-300 mb-1">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="John Doe"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-space-300 mb-1">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-space-300 mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="********"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-space-300 mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="********"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                className="h-4 w-4 rounded border-space-700 bg-space-800 text-stellar-600 focus:ring-stellar-500"
+              />
+              <label htmlFor="terms" className="ml-2 text-sm text-space-300">
+                I agree to the{' '}
+                <a href="#" className="text-stellar-400 hover:text-stellar-300 transition-colors">
+                  Terms of Service
+                </a>{' '}
+                and{' '}
+                <a href="#" className="text-stellar-400 hover:text-stellar-300 transition-colors">
+                  Privacy Policy
+                </a>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn btn-primary w-full"
+            >
+              {isLoading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              ) : (
+                'Create Account'
+              )}
+            </button>
+          </div>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-space-400">
+          <span>Already have an account?</span>{' '}
+          <Link to="/login" className="text-stellar-400 hover:text-stellar-300 transition-colors">
+            Sign in
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default RegisterForm;
