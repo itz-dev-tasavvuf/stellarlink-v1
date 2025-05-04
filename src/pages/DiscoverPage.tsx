@@ -4,6 +4,7 @@ import UserCard from '../components/discover/UserCard';
 import FilterPanel, { FilterOptions } from '../components/discover/FilterPanel';
 import { useUserData } from '../context/UserDataContext';
 import { User } from '../types/user';
+import BlurText from '../components/common/BlurText';
 
 const DiscoverPage: React.FC = () => {
   const { users, isLoading } = useUserData();
@@ -62,13 +63,13 @@ const DiscoverPage: React.FC = () => {
   return (
     <div className="min-h-screen pt-16">
       <div className="container mx-auto px-4 py-8">
+        <BlurText text="Discover Space Enthusiasts" className="text-3xl font-bold mb-4" />
         <motion.div 
           className="mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold">Discover Space Enthusiasts</h1>
           <p className="text-space-300 mt-2">
             Find and connect with people who share your passion for space exploration.
             Filter by interests, location, and more.

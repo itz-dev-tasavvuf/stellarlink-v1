@@ -5,6 +5,7 @@ import ProfileHeader from '../components/profile/ProfileHeader';
 import DreamsAchievements from '../components/profile/DreamsAchievements';
 import { useUserData } from '../context/UserDataContext';
 import { useAuth } from '../context/AuthContext';
+import BlurText from '../components/common/BlurText';
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,6 +68,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="min-h-screen pt-16">
       <div className="container mx-auto px-4 py-8">
+        <BlurText text="Profile" className="text-3xl font-bold mb-4" />
         <motion.div 
           className="grid grid-cols-1 gap-6"
           initial={{ opacity: 0 }}

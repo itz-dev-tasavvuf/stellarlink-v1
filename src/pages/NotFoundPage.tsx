@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home } from 'lucide-react';
+import BlurText from '../components/common/BlurText';
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -15,7 +16,7 @@ const NotFoundPage: React.FC = () => {
         <div className="text-9xl font-bold bg-gradient-to-r from-stellar-400 to-nebula-500 bg-clip-text text-transparent mb-4">
           404
         </div>
-        <h1 className="text-3xl font-bold mb-4">Page Not Found</h1>
+        <BlurText text="Page Not Found" className="text-3xl font-bold mb-4" />
         <p className="text-space-300 mb-8 max-w-md mx-auto">
           The page you are looking for might have been removed, had its name changed, 
           or is temporarily unavailable.

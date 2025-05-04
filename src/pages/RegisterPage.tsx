@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 import RegisterForm from '../components/auth/RegisterForm';
 import Starfield from '../components/common/Starfield';
+import BlurText from '../components/common/BlurText';
 
 const RegisterPage: React.FC = () => {
   return (
@@ -23,7 +24,12 @@ const RegisterPage: React.FC = () => {
       
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4">
-        <RegisterForm />
+        <div className="min-h-screen pt-16 flex items-center justify-center">
+          <div className="w-full max-w-md p-8 card">
+            <BlurText text="Register" className="text-3xl font-bold mb-4" />
+            <RegisterForm />
+          </div>
+        </div>
       </main>
       
       {/* Footer */}

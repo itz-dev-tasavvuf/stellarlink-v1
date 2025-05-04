@@ -2,10 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Globe, Users, Rocket, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import BlurText from '../components/common/BlurText';
+import Lanyard from '../Lanyard';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-16">
+      <div className="container mx-auto px-4 py-8">
+        <BlurText text="Home" className="text-3xl font-bold mb-4" />
+      </div>
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
         <div className="container mx-auto max-w-5xl text-center">
@@ -173,6 +178,14 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      
+      {/* Developer Credit & Lanyard */}
+      <div className="flex flex-col items-center mt-12 mb-8">
+        <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+        <div className="mt-4 text-center">
+          <span className="text-space-400 text-sm">Developed by <span className="font-bold text-stellar-400">Tasavvuf Gori</span></span>
+        </div>
+      </div>
     </div>
   );
 };

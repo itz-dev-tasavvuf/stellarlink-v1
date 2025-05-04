@@ -9,6 +9,7 @@ interface User {
 interface AuthContextType {
   currentUser: User | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -17,6 +18,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   isAuthenticated: false,
+  loading: true,
   login: async () => {},
   register: async () => {},
   logout: () => {},
@@ -27,15 +29,19 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Check if user is logged in on initial load
   useEffect(() => {
+    setLoading(true);
     const storedUser = localStorage.getItem('stellarlink_user');
     if (storedUser) {
       const user = JSON.parse(storedUser);
       setCurrentUser(user);
       setIsAuthenticated(true);
     }
+    setLoading(false);
+    console.log('[AuthProvider] loading:', loading, 'isAuthenticated:', isAuthenticated, 'currentUser:', currentUser);
   }, []);
 
   // Login function - for demo purposes
@@ -90,6 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     currentUser,
     isAuthenticated,
+    loading,
     login,
     register,
     logout,

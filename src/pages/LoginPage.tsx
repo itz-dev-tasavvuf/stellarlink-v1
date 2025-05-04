@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 import LoginForm from '../components/auth/LoginForm';
 import Starfield from '../components/common/Starfield';
+import BlurText from '../components/common/BlurText';
 
 const LoginPage: React.FC = () => {
   return (
@@ -23,7 +24,10 @@ const LoginPage: React.FC = () => {
       
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4">
-        <LoginForm />
+        <div className="w-full max-w-md p-8 card">
+          <BlurText text="Login" className="text-3xl font-bold mb-4" />
+          <LoginForm />
+        </div>
       </main>
       
       {/* Footer */}
