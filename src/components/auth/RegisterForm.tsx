@@ -8,6 +8,10 @@ const RegisterForm: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [location, setLocation] = useState('');
+  const [interests, setInterests] = useState(''); // Assuming comma-separated string for now
+  const [dreams, setDreams] = useState('');
+  const [achievements, setAchievements] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +32,13 @@ const RegisterForm: React.FC = () => {
 
     try {
       // For demo purposes, we'll simulate registration
-      await register(fullName, email, password);
+      await register(fullName, email, password, {
+        location,
+        interests: interests.split(',').map(item => item.trim()), // Convert interests string to array
+        dreams,
+        achievements,
+        joinedDate: new Date().toISOString(), // Add joined date
+      });
       navigate('/map');
     } catch (err) {
       setError('Failed to create account. Please try again.');
@@ -111,6 +121,70 @@ const RegisterForm: React.FC = () => {
                   placeholder="********"
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="location" className="block text-sm font-medium text-space-300 mb-1">
+                Location
+              </label>
+              <div className="relative">
+                {/* You might want a different icon for location */}
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="location"
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="input pl-10"
+                  placeholder="Your location (e.g., New York, NY)"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="interests" className="block text-sm font-medium text-space-300 mb-1">
+                Interests (comma-separated)
+              </label>
+              <div className="relative">
+                {/* You might want a different icon for interests */}
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="interests"
+                  type="text"
+                  value={interests}
+                  onChange={(e) => setInterests(e.target.value)}
+                  className="input pl-10"
+                  placeholder="e.g., Astrophysics, Mars, Telescopes"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="dreams" className="block text-sm font-medium text-space-300 mb-1">
+                Dreams
+              </label>
+              <textarea
+                id="dreams"
+                value={dreams}
+                onChange={(e) => setDreams(e.target.value)}
+                className="input"
+                placeholder="Share your space-related dreams..."
+                rows={3}
+              ></textarea>
+            </div>
+
+            <div>
+              <label htmlFor="achievements" className="block text-sm font-medium text-space-300 mb-1">
+                Achievements
+              </label>
+              <textarea
+                id="achievements"
+                value={achievements}
+                onChange={(e) => setAchievements(e.target.value)}
+                className="input"
+                placeholder="Share your space-related achievements..."
+                rows={3}
+              ></textarea>
             </div>
 
             <div>

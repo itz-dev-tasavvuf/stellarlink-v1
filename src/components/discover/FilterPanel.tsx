@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const interestCategories = [

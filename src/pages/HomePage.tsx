@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import { Globe, Users, Rocket, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BlurText from '../components/common/BlurText';
-import Lanyard from '../Lanyard';
+import SpotlightCard from "../components/common/SpotlightCard";
 
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen pt-16">
       <div className="container mx-auto px-4 py-8">
-        <BlurText text="Home" className="text-3xl font-bold mb-4" />
       </div>
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
@@ -63,64 +62,68 @@ const HomePage: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Feature 1 */}
-            <motion.div 
-              className="card p-6 flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-16 h-16 rounded-full bg-stellar-900/50 flex items-center justify-center mb-4">
-                <Globe className="text-stellar-400" size={28} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Global Map</h3>
-              <p className="text-space-300">
-                Explore an interactive 3D globe showing space enthusiasts from around the world.
-              </p>
-            </motion.div>
-            
+            <SpotlightCard>
+ <motion.div 
+ className="card p-6 flex flex-col items-center text-center"
+ initial={{ opacity: 0, y: 20 }}
+ whileInView={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.5 }}
+ viewport={{ once: true }}
+ >
+ <div className="w-16 h-16 rounded-full bg-stellar-900/50 flex items-center justify-center mb-4">
+ <Globe className="text-stellar-400" size={28} />
+ </div>
+ <h3 className="text-xl font-bold mb-2">Global Map</h3>
+ <p className="text-space-300">
+ Explore an interactive 3D globe showing space enthusiasts from around the world.
+ </p>
+ </motion.div>
+ </SpotlightCard>
             {/* Feature 2 */}
-            <motion.div 
-              className="card p-6 flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-16 h-16 rounded-full bg-nebula-900/50 flex items-center justify-center mb-4">
-                <Users className="text-nebula-400" size={28} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Connect</h3>
-              <p className="text-space-300">
-                Build your network with fellow enthusiasts who share your passion for space.
-              </p>
-            </motion.div>
-            
+            <SpotlightCard>
+ <motion.div 
+ className="card p-6 flex flex-col items-center text-center"
+ initial={{ opacity: 0, y: 20 }}
+ whileInView={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.5, delay: 0.1 }}
+ viewport={{ once: true }}
+ >
+ <div className="w-16 h-16 rounded-full bg-nebula-900/50 flex items-center justify-center mb-4">
+ <Users className="text-nebula-400" size={28} />
+ </div>
+ <h3 className="text-xl font-bold mb-2">Connect</h3>
+ <p className="text-space-300">
+ Build your network with fellow enthusiasts who share your passion for space.
+ </p>
+ </motion.div>
+ </SpotlightCard>
             {/* Feature 3 */}
-            <motion.div 
-              className="card p-6 flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-16 h-16 rounded-full bg-aurora-900/50 flex items-center justify-center mb-4">
-                <Rocket className="text-aurora-400" size={28} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Share Dreams</h3>
-              <p className="text-space-300">
-                Document your space-related dreams, goals, and achievements with the community.
-              </p>
-            </motion.div>
-            
+            <SpotlightCard>
+ <motion.div 
+ className="card p-6 flex flex-col items-center text-center"
+ initial={{ opacity: 0, y: 20 }}
+ whileInView={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.5, delay: 0.2 }}
+ viewport={{ once: true }}
+ >
+ <div className="w-16 h-16 rounded-full bg-aurora-900/50 flex items-center justify-center mb-4">
+ <Rocket className="text-aurora-400" size={28} />
+ </div>
+ <h3 className="text-xl font-bold mb-2">Share Dreams</h3>
+ <p className="text-space-300">
+ Document your space-related dreams, goals, and achievements with the community.
+ </p>
+ </motion.div>
+ </SpotlightCard>
             {/* Feature 4 */}
-            <motion.div 
-              className="card p-6 flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
+            <SpotlightCard>
+ <motion.div 
+ className="card p-6 flex flex-col items-center text-center"
+ initial={{ opacity: 0, y: 20 }}
+ whileInView={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.5, delay: 0.3 }}
+ viewport={{ once: true }}
+ >
               <div className="w-16 h-16 rounded-full bg-comet-900/50 flex items-center justify-center mb-4">
                 <Search className="text-comet-400" size={28} />
               </div>
@@ -129,6 +132,7 @@ const HomePage: React.FC = () => {
                 Find people with specific expertise or interests in various space-related fields.
               </p>
             </motion.div>
+ </SpotlightCard>
           </div>
         </div>
       </section>
@@ -179,9 +183,9 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       
-      {/* Developer Credit & Lanyard */}
+      {/* Developer Credit */}
       <div className="flex flex-col items-center mt-12 mb-8">
-        <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+        {/* Removed Lanyard component */}
         <div className="mt-4 text-center">
           <span className="text-space-400 text-sm">Developed by <span className="font-bold text-stellar-400">Tasavvuf Gori</span></span>
         </div>

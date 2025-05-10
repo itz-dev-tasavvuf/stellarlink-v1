@@ -54,52 +54,57 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         
         {/* User details */}
         <div className="mt-4 space-y-2">
-          <div className="flex items-center gap-2 text-space-300">
-            <MapPin size={16} />
-            <span>{user.location.city}, {user.location.country}</span>
-          </div>
+ {user.location?.city && user.location?.country && (
+ <>
+ <div className="flex items-center gap-2 text-space-300">
+ <MapPin size={16} />
+ <span>{user.location.city}, {user.location.country}</span>
+ </div>
           
-          <div className="flex items-center gap-2 text-space-300">
-            <Calendar size={16} />
-            <span>Joined {new Date(user.joinedDate).toLocaleDateString()}</span>
-          </div>
-          
-          {user.email && (
+ <div className="flex items-center gap-2 text-space-300">
+ <Calendar size={16} />
+ <span>Joined {new Date(user.joinedDate).toLocaleDateString()}</span>
+ </div>
+ </>
+ )}
+
+ {user.email && (
             <div className="flex items-center gap-2 text-space-300">
-              <Mail size={16} />
-              <span>{user.email}</span>
+ <Mail size={16} />
+ <span>{user.email}</span>
             </div>
-          )}
-          
-          {user.website && (
+ )}
+
+ {user.website && (
             <div className="flex items-center gap-2 text-space-300">
-              <LinkIcon size={16} />
-              <a 
+ <LinkIcon size={16} />
+ <a
                 href={user.website} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-stellar-400 hover:text-stellar-300 transition-colors"
-              >
+ >
                 {user.website.replace(/^https?:\/\//, '')}
-              </a>
+ </a>
             </div>
-          )}
+ )}
         </div>
         
         {/* Interests */}
         <div className="mt-6">
           <h3 className="text-space-300 text-sm font-medium mb-2">Interests</h3>
-          <div className="flex flex-wrap gap-2">
+          {user.interests && user.interests.length > 0 && (<div className="flex flex-wrap gap-2">
             {user.interests.map((interest, index) => (
               <InterestBadge key={index} interest={interest} />
-            ))}
-          </div>
+ ))}
+ </div>
+ )}
         </div>
-        
+
         {/* Bio */}
         <div className="mt-6">
           <h3 className="text-space-300 text-sm font-medium mb-2">Bio</h3>
-          <p className="text-white/90">{user.bio}</p>
+          <p className="text-white/90">{user.bio || 'No bio available.'}</p>
         </div>
       </div>
     </motion.div>

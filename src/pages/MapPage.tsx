@@ -1,9 +1,25 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import GlobeVisualization from '../components/map/GlobeVisualization';
 import BlurText from '../components/common/BlurText';
+import { User } from '../types/user';
 
 const MapPage: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/users'); // Assuming your backend runs on the same origin
+        const data: User[] = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsers();
+  }, []); // Empty dependency array means this effect runs only once on mount
   return (
     <div className="min-h-screen pt-16">
       <div className="container mx-auto px-4 py-8">
@@ -27,7 +43,7 @@ const MapPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          <GlobeVisualization />
+          <GlobeVisualization userData={users} />
         </motion.div>
       </div>
     </div>

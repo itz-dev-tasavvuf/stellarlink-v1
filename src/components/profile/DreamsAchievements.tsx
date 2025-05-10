@@ -16,6 +16,11 @@ const DreamsAchievements: React.FC<DreamsAchievementsProps> = ({
   onAddDream,
   onAddAchievement
 }) => {
+  // Render nothing or a loading/placeholder state if user is null/undefined
+  if (!user) {
+    return null; 
+  }
+
   const dreamVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
@@ -48,8 +53,8 @@ const DreamsAchievements: React.FC<DreamsAchievementsProps> = ({
           )}
         </div>
 
-        {user.dreams.length > 0 ? (
-          <div className="space-y-4">
+        {user.dreams && user.dreams.length > 0 ? (
+          <div className="space-y-4"> {/* Ensure user.dreams exists */}
             {user.dreams.map((dream, index) => (
               <motion.div
                 key={index}
@@ -89,8 +94,8 @@ const DreamsAchievements: React.FC<DreamsAchievementsProps> = ({
           )}
         </div>
 
-        {user.achievements.length > 0 ? (
-          <div className="space-y-4">
+        {user.achievements && user.achievements.length > 0 ? (
+          <div className="space-y-4"> {/* Ensure user.achievements exists */}
             {user.achievements.map((achievement, index) => (
               <motion.div
                 key={index}

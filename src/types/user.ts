@@ -1,4 +1,4 @@
-export interface Location {
+ export interface Location {
   lat: number;
   lng: number;
   city: string;
@@ -19,16 +19,17 @@ export interface Achievement {
 }
 
 export interface User {
+  _id?: string;
   id: string;
   name: string;
   email?: string;
-  profileImage?: string;
-  title: string;
-  bio: string;
-  location: Location;
-  interests: string[];
-  dreams: Dream[];
-  achievements: Achievement[];
-  joinedDate: string;
+  profileImage?: string; // Keep optional as it was
+  title?: string; // Make optional
+  bio?: string; // Make optional
+  location?: Location; // Make optional
+  interests?: string[]; // Make optional
+  dreams?: Dream[]; // Make optional
+  achievements?: Achievement[]; // Make optional
+  joinedDate?: string; // Make optional
   website?: string;
 }

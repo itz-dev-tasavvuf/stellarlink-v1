@@ -16,7 +16,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, index }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="card hover:border-stellar-700 transition-colors duration-200"
+      className="card hover:border-stellar-700 transition-all duration-300 transform hover:scale-103 hover:shadow-xl hover:shadow-stellar-500/20"
     >
       <Link to={`/profile/${user.id}`} className="block p-5">
         <div className="flex items-center gap-4">
