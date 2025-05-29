@@ -12,5 +12,9 @@ export default defineConfig({
       }
     }
   },
-  logLevel: 'info'
+  logLevel: 'info',
+  optimizeDeps: {
+    include: ["firebase", "firebase/auth"],
+  },
+
 });

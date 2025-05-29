@@ -17,13 +17,9 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   }, [loading, isAuthenticated]);
 
   if (loading) {
-    console.log('[RequireAuth] Auth is loading, showing spinner.');
-    // Show a full-page spinner while auth is loading
+    console.log('[RequireAuth] Auth is loading, showing loading text.');
     return (
-      <div className="min-h-screen flex items-center justify-center bg-space-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stellar-500 mb-4"></div>
-        <span className="ml-4 text-stellar-400 font-medium">Checking authentication...</span>
-      </div>
+      <div>Loading...</div>
     );
   }
 

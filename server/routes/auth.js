@@ -3,10 +3,11 @@ const router = express.Router();
 const User = require('../models/User'); // Assuming User model includes fields for additional data
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { auth } = require('../firebase');
 
 // Register a new user
 router.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, fullName, email, password } = req.body;
 
   try {
     // Check if user already exists
@@ -21,10 +22,12 @@ router.post('/register', async (req, res) => {
 
     // Create new user
     // Extract additional data from the request body
-    const { location, interests, dreams, achievements, ...rest } = req.body;
+    const { location, interests, dreams, achievements } = req.body;
 
+    // Create a new user instance
     user = new User({
       username,
+      fullName,
       email,
       password: hashedPassword,
       location,
@@ -33,8 +36,16 @@ router.post('/register', async (req, res) => {
       achievements,
     });
 
-    // Save user to database
+    // Save the user to the database
     await user.save();
+
+    // Get the Firebase UID
+    const firebaseUser = await auth.getUserByEmail(email);
+
+    // Update the user's _id with the Firebase UID
+    user._id = firebaseUser.uid;
+    await user.save();
+
 
     res.status(201).json({ msg: 'User registered successfully' });
 
@@ -64,7 +75,7 @@ router.post('/login', async (req, res) => {
     // Generate JWT
     const payload = {
       user: {
-        id: user._id,
+        id: user.id,
       },
     };
 

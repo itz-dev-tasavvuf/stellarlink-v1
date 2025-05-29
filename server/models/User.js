@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: { // This is the second definition, keep this
+  _id: {
+    type: String,
+  },
+  username: {
     type: String,
     required: true,
     unique: true
@@ -14,6 +17,18 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  location: {
+    type: String,
+  },
+  interests: {
+    type: String,
+  },
+  dreams: {
+    type: String,
+  },
+  achievements: {
+    type: String,
   }
 }, {
   timestamps: true // Adds createdAt and updatedAt fields

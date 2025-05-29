@@ -9,7 +9,8 @@ const Layout: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Starfield />
       <Navbar />
-      <main className="flex-grow">
+      {/* Added pt-20 to the main content area to prevent content from being hidden behind the fixed navbar */}
+      <main className="flex-grow overflow-y-auto pt-20">
         <Outlet />
       </main>
       <Footer />

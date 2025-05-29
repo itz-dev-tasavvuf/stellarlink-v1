@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, authUser } = useAuth(); // Access authUser
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,7 +74,8 @@ const Navbar: React.FC = () => {
                   className="btn btn-ghost"
                 >
                   <User size={18} />
-                  <span>Profile</span>
+                  {/* Display user's name */}                  
+                  <span>{authUser?.displayName || 'Profile'}</span>
                 </Link>
                 <button 
                   onClick={logout} 
@@ -144,7 +145,8 @@ const Navbar: React.FC = () => {
                       onClick={closeMenu}
                     >
                       <User size={18} />
-                      <span>Profile</span>
+                      {/* Display user's name */}                      
+                      <span>{authUser?.displayName || 'Profile'}</span>
                     </Link>
                     <button
                       onClick={() => {

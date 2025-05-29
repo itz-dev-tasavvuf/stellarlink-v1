@@ -1,6 +1,7 @@
 {
   "hosting": {
     "source": ".",
+    "site": "stellarlink-v1",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,5 +10,13 @@
     "frameworksBackend": {
       "region": "asia-east1"
     }
+  },
+  "emulators": {
+    "dataconnect": {
+      "dataDir": "dataconnect/.dataconnect/pgliteData"
+    }
+  },
+  "dataconnect": {
+    "source": "dataconnect"
   }
 }

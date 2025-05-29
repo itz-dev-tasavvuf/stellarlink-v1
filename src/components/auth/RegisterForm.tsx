@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import zxcvbn from 'zxcvbn';
 
 const RegisterForm: React.FC = () => {
+  const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,31 +19,62 @@ const RegisterForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [passwordFeedback, setPasswordFeedback] = useState('');
+  const [isStrongPassword, setIsStrongPassword] = useState(false);
+
+  useEffect(() => {
+    const result = zxcvbn(password);
+    setPasswordStrength(result.score);
+
+    if (password.length > 0) {
+      // Provide more specific feedback based on the score
+      if (result.score === 0) {
+        setPasswordFeedback('Very weak: Try a longer password with mixed characters.');
+      } else if (result.score === 1) {
+        setPasswordFeedback('Weak: Add more variety with uppercase, lowercase, numbers, and symbols.');
+      } else if (result.score === 2) {
+        setPasswordFeedback('Fair: A bit more complexity would improve security.');
+      } else if (result.score === 3) {
+        setPasswordFeedback('Good: Almost there! Just a little more to be safe.');
+      } else {
+        setPasswordFeedback('Strong: Excellent password!');
+      }
+    } else {
+      setPasswordFeedback('');
+    }
+
+    setIsStrongPassword(result.score >= 3);
+  }, [password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     setIsLoading(true);
 
     try {
       // For demo purposes, we'll simulate registration
-      await register(fullName, email, password, {
+      await register(
+        username,
+        fullName,
+        email,
+        password,
         location,
-        interests: interests.split(',').map(item => item.trim()), // Convert interests string to array
+        interests,
         dreams,
-        achievements,
-        joinedDate: new Date().toISOString(), // Add joined date
-      });
+        achievements
+      );
       navigate('/map');
-    } catch (err) {
-      setError('Failed to create account. Please try again.');
+    } catch (err: any) {
+      setError(err.message || 'Failed to create account. Please try again.');
+      console.error(err); // Log the error to console
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +102,24 @@ const RegisterForm: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-space-300 mb-1">
+                Username
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="johndoe"
+                />
+              </div>
+            </div>
+
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-space-300 mb-1">
                 Full Name
@@ -116,6 +167,29 @@ const RegisterForm: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="input pl-10"
+                  placeholder="********"
+                />
+              </div>
+              {passwordFeedback && (
+                <p className={`text-sm mt-1 ${passwordStrength < 3 ? 'text-red-500' : 'text-green-500'}`}>
+                  {passwordFeedback}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-space-300 mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className="input pl-10"
                   placeholder="********"
@@ -187,24 +261,6 @@ const RegisterForm: React.FC = () => {
               ></textarea>
             </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-space-300 mb-1">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-space-500" size={18} />
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="input pl-10"
-                  placeholder="********"
-                />
-              </div>
-            </div>
-
             <div className="flex items-center">
               <input
                 id="terms"
@@ -227,7 +283,7 @@ const RegisterForm: React.FC = () => {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isStrongPassword}
               className="btn btn-primary w-full"
             >
               {isLoading ? (

@@ -1,157 +1,105 @@
-/*
-WARNING: SECURITY RISK - This application currently stores user data, including
-sensitive information like passwords, directly in localStorage. This is highly
-insecure and should only be used for demonstration or temporary development purposes.
-A proper backend with secure password hashing and a database is essential for
-managing user accounts and data securely in a production environment.*/
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  _id: string;
-  id: string;
-  name: string;
-  email: string;
-}
+import { createContext, useContext, useState, useEffect } from "react";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { AppUser } from "../types/user";
 
 interface AuthContextType {
-  currentUser: User | null;
-  isAuthenticated: boolean;
-  loading: boolean;
+  authUser: AppUser | null;
+  isAuthenticated: boolean; // Derive this from authUser
+  loading: boolean; // Indicate whether the initial auth check is complete
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  register: (username: string, fullName: string, email: string, password: string, location: string, interests: string, dreams: string, achievements: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  currentUser: null,
+  authUser: null,
   isAuthenticated: false,
   loading: true,
-  login: async () => {},
   register: async () => {},
-  logout: () => {},
+  login: async () => {},
+  logout: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authUser, setAuthUser] = useState<AppUser | null>(null);
+  const isAuthenticated = !!authUser; // Derive isAuthenticated from authUser
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Check if user is logged in on initial load
   useEffect(() => {
-    console.log('[AuthProvider] Initial load check...');
-    const storedUser = localStorage.getItem('stellarlink_user');
-    if (storedUser) {
-      try {
-        const user: User = JSON.parse(storedUser);
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-        console.log('[AuthProvider] User found in localStorage.');
-      } catch (error) {
-        console.error('[AuthProvider] Error parsing user from localStorage:', error);
-        // Clear invalid data from localStorage
-        localStorage.removeItem('stellarlink_user');
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        // console.log('User is signed in:', user);
+        setAuthUser({ uid: user.uid, email: user.email ?? '' });
+      } else {
+        // console.log('User is signed out');
+        setAuthUser(null);
       }
-    } else {
-      console.log('[AuthProvider] No user found in localStorage.');
-    }
-    setLoading(false);
-    console.log('[AuthProvider] Initial load check finished, loading set to false.');
+      setLoading(false);
+
+      console.log('AuthUser:', user);
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
-  // Log auth state changes
-  useEffect(() => {
-    console.log('[AuthProvider] Auth state updated - loading:', loading, 'isAuthenticated:', isAuthenticated, 'currentUser:', currentUser ? currentUser.email : 'null');
-  }, [loading, isAuthenticated, currentUser]);
-
-  // Login function - for demo purposes
+  // Attempt to automatically log in a mock user for hackathon demo purposes
+  // useEffect(() => {
+  //   if (!authUser && !loading) { // Only attempt if no user is authenticated and initial check is done
+  //     signInWithEmailAndPassword(auth, "fiaorganization01@gmail.com", "considermeforCTO99")
+  //       .catch((error) => {
+  //         console.error("Automatic mock user login failed:", error);
+  //         // Continue without logging in if auto-login fails
+  //       });
+  //   }
+  // }, [authUser, loading]); // Dependency array includes authUser and loading
+  
+  // Firebase login
   const login = async (email: string, password: string): Promise<void> => {
-    setLoading(true); // Set loading true while attempting login
-    console.log('[AuthProvider] Attempting login...');
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simulate login validation
-      if (email && password) {
-        const user = {
-          id: '1',
-          name: 'Demo User',
-          email,
-        };
-        
-        localStorage.setItem('stellarlink_user', JSON.stringify(user));
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-        console.log('[AuthProvider] Login successful for user:', user.email);
-      } else {
-        console.error('[AuthProvider] Login failed: Invalid credentials');
-        throw new Error('Invalid login credentials');
-      }
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.error('[AuthProvider] Login failed:', error);
-      setIsAuthenticated(false);
-      setCurrentUser(null); // Ensure user is null on failure
-      throw error; // Re-throw the error to be caught by the login form
-    } finally {
-      setLoading(false); // Set loading false after attempt
-      console.log('[AuthProvider] Login attempt finished, loading set to false.');
+      console.error("Login failed:", error);
+      throw error;
     }
   };
 
-  // Register function - for demo purposes
-  const register = async (name: string, email: string, password: string): Promise<void> => {
-    setLoading(true); // Set loading true while attempting registration
-    console.log('[AuthProvider] Attempting registration...');
+  // Firebase register
+  const register = async (username: string, fullName: string, email: string, password: string, location: string, interests: string, dreams: string, achievements: string): Promise<void> => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simulate registration
-      if (name && email && password) {
-        const user = {
-          id: '1',
-          name,
-          email,
-        };
-        
-        localStorage.setItem('stellarlink_user', JSON.stringify(user));
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-        console.log('[AuthProvider] Registration successful for user:', user.email);
-      } else {
-        console.error('[AuthProvider] Registration failed: Invalid data');
-        throw new Error('Invalid registration data');
-      }
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Update the user's profile with the display name
+      // await updateProfile(auth.currentUser, { displayName: fullName }); // does not work
     } catch (error) {
-      console.error('[AuthProvider] Registration failed:', error);
-       setIsAuthenticated(false); // Ensure state is consistent on failure
-       setCurrentUser(null);
-      throw error; // Re-throw the error
-    } finally {
-       setLoading(false); // Set loading false after attempt
-       console.log('[AuthProvider] Registration attempt finished, loading set to false.');
+      console.error("Registration failed:", error);
+      throw error;
     }
   };
 
-  // Logout function
-  const logout = () => {
-    console.log('[AuthProvider] Logging out...');
-    localStorage.removeItem('stellarlink_user');
-    setCurrentUser(null);
-    setIsAuthenticated(false);
-    console.log('[AuthProvider] Logout complete.');
+  // Firebase logout
+  const logout = async (): Promise<void> => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      throw error;
+    }
   };
 
   const value = {
-    currentUser,
+    authUser,
     isAuthenticated,
     loading,
-    login,
     register,
-    logout,
+    login,
+    logout
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
